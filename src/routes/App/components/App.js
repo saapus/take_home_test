@@ -20,7 +20,7 @@ function App() {
           onClick={toggleTheme}
         >
           <FontAwesomeIcon
-            color={isDarkMode ? "white" : "black"}
+            color={isDarkMode && "#FFA500"}
             icon={isDarkMode ? faSun : faMoon}
           />
         </button>
