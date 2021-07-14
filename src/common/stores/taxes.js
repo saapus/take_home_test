@@ -4,7 +4,7 @@ import reduxThunk from "redux-thunk";
 export const ActionTypes = {
   ADD_ENTRY: "ADD_ENTRY",
   INIT_ENTRIES: "INIT_ENTRIES",
-  FILTER_ENTRIES: "FILTER_ENTRIES",
+	FILTER_ENTRIES: "FILTER_ENTRIES",
 };
 
 function taxReducer(state = {}, action) {
@@ -42,7 +42,7 @@ function taxReducer(state = {}, action) {
 				entries,
 				filtered
 			};
-    }
+		}
     default:
       return state;
   }
@@ -54,7 +54,7 @@ function initData() {
 			const data = await fetch("https://api-prod.workhorsescs.pro/api/taxes").then(r => r.json()); 
 			dispatch({
 				type: ActionTypes.INIT_ENTRIES,
-        payload: data.data.slice(0, 100),
+        payload: data.data,
       });
 		})();
 	};
@@ -62,7 +62,10 @@ function initData() {
 
 const store = createStore(
   taxReducer,
-  { entries: [], filtered: [] },
+  {
+    entries: [],
+    filtered: [],
+  },
   applyMiddleware(reduxThunk)
 );
 

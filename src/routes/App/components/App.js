@@ -73,19 +73,33 @@ function App() {
         <h2 className="subtitle">Filter by</h2>
       </div>
       <div className="level">
-        <InputField label="Zip Code" value={filters.zipCode}
+        <InputField
+          label="Zip Code"
+          value={filters.zipCode}
           onChange={(e) => setFilters({ ...filters, zipCode: e.target.value })}
         />
-        <InputField label="City" value={filters.city}
+        <InputField
+          label="City"
+          value={filters.city}
           onChange={(e) => setFilters({ ...filters, city: e.target.value })}
         />
-        <InputField label="State" value={filters.state}
+        <InputField
+          label="State"
+          value={filters.state}
           onChange={(e) => setFilters({ ...filters, state: e.target.value })}
         />
       </div>
       <div className="container level columns is-variable is-4"></div>
       <div className="level">
-        {data && <Table columns={columns} rows={data} />}
+        {data && !!data.length ? (
+          <Table columns={columns} rows={data} />
+        ) : (
+          Object.values(filters).filter(Boolean).length ? (
+            <progress className="progress is-medium is-dark" max="100">
+              45%
+            </progress>
+          ) : null
+        )}
       </div>
 
       <div className="field">
