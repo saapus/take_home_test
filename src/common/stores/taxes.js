@@ -35,7 +35,7 @@ function taxReducer(state = {}, action) {
 				if (zipCode) flag += i.zip_code.startsWith(zipCode);
 				if (city) flag += i.city.startsWith(city);
 				if (stateFilter) flag += i.state.startsWith(stateFilter);
-				return flag === Object.keys(filters).map(i => filters[i]).filter(Boolean).length;
+				return flag === Object.values(filters).filter(Boolean).length;
       });
 			return {
 				...state,
@@ -51,7 +51,7 @@ function taxReducer(state = {}, action) {
 function initData() {
 	return (dispatch) => {
 		(async () => {
-			const data = await fetch("https://api-prod.workhorsescs.pro/api/taxes").then(r => r.json()); 
+			const data = await fetch("https://api-prod.workhorsescs.pro/api/taxes").then(r => r.json());
 			dispatch({
 				type: ActionTypes.INIT_ENTRIES,
         payload: data.data,
