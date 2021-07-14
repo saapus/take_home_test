@@ -1,97 +1,81 @@
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useTheme } from '../../../common/contexts/theme';
-import Table from './Table';
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector, useDispatch } from "react-redux";
+import { ActionTypes } from "../../../common/stores/taxes";
+import { useTheme } from "../../../common/contexts/theme";
+import Table from "./Table";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
-import '../styles/_app.scss';
+import "../styles/_app.scss";
+
+const columns = [
+  {
+    label: "ID",
+    key: "id",
+  },
+  {
+    label: "Zip Code",
+    key: "zip_code",
+  },
+  {
+    label: "City",
+    key: "city",
+  },
+  {
+    label: "City Rate",
+    key: "city_rate",
+  },
+  {
+    label: "State",
+    key: "state",
+  },
+  {
+    label: "State Name",
+    key: "state_name",
+  },
+  {
+    label: "State Rate",
+    key: "state_rate",
+  },
+  {
+    label: "County",
+    key: "county",
+  },
+  {
+    label: "County Rate",
+    key: "county_rate",
+  },
+  {
+    label: "Special",
+    key: "special",
+  },
+  {
+    label: "Combined Rate",
+    key: "combined_rate",
+    shorten: "Comb Rate",
+  },
+  {
+    label: "Combined District Rate",
+    key: "combined_district_rate",
+    shorten: "CDR",
+  },
+];
 
 function App() {
   const [isDarkMode, toggleTheme] = useTheme();
-  const [data, setData] = useState(null);
-  const [paginatedData, setPaginatedData] = useState(null);
-  const [rows, setRows] = useState(null);
+  const data = useSelector((state) => state.filtered);
+  const dispatch = useDispatch();
   const [filters, setFilters] = useState({
     city: "",
     state: "",
-    zipCode: ""
+    zipCode: "",
   });
-  const columns = [
-    {
-      label: "ID",
-      key: "id",
-    },
-    {
-      label: "Zip Code",
-      key: "zip_code",
-    },
-    {
-      label: "City",
-      key: "city",
-    },
-    {
-      label: "City Rate",
-      key: "city_rate",
-    },
-    {
-      label: "State",
-      key: "state",
-    },
-    {
-      label: "State Name",
-      key: "state_name",
-    },
-    {
-      label: "State Rate",
-      key: "state_rate",
-    },
-    {
-      label: "County",
-      key: "county",
-    },
-    {
-      label: "County Rate",
-      key: "county_rate",
-    },
-    {
-      label: "Special",
-      key: "special",
-    },
-    {
-      label: "Combined Rate",
-      key: "combined_rate",
-      shorten: "Comb Rate"
-    },
-    {
-      label: "Combined District Rate",
-      key: "combined_district_rate",
-      shorten: "CDR"
-    },
-  ];
-
-  useEffect(() => {
-    fetch("https://api-prod.workhorsescs.pro/api/taxes")
-      .then(r => r.json())
-      .then(r => setData(r));
-  }, []);
 
   useEffect(() => {
     if (!data) return;
-    const paginatedData = data.data.slice(0, 20);
-    setPaginatedData(paginatedData);
-    setRows(paginatedData);
-  }, [data]);
-
-  useEffect(() => {
-    if (!data) return;
-    const { zipCode, city, state } = filters;
-    setRows(data.data.filter((i) => {
-      if (!(zipCode || city || state)) return true;
-      if (zipCode && i.zip_code.startsWith(zipCode)) return true;
-      if (city && i.city.startsWith(city)) return true;
-      if (state && i.state.startsWith(state)) return true;
-      return false;
-    }
-    ));
+    dispatch({
+      type: ActionTypes.FILTER_ENTRIES,
+      payload: filters,
+    });
   }, [filters]);
 
   return (
@@ -154,9 +138,7 @@ function App() {
             className="input is-primary"
             type="text"
             placeholder="Primary input"
-            onChange={(e) =>
-              setFilters({ ...filters, city: e.target.value })
-            }
+            onChange={(e) => setFilters({ ...filters, city: e.target.value })}
           ></input>
         </div>
         <div className="column is-one-fifth">
@@ -165,14 +147,12 @@ function App() {
             className="input is-primary"
             type="text"
             placeholder="Primary input"
-            onChange={(e) =>
-              setFilters({ ...filters, state: e.target.value })
-            }
+            onChange={(e) => setFilters({ ...filters, state: e.target.value })}
           ></input>
         </div>
       </div>
       <div className="level">
-        {rows && <Table columns={columns} rows={rows.slice(0, 20)} />}
+        {data && <Table columns={columns} rows={data} />}
       </div>
 
       <div className="field">
