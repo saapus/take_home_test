@@ -1,64 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector, useDispatch } from "react-redux";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { ActionTypes } from "../../../common/stores/taxes";
 import { useTheme } from "../../../common/contexts/theme";
+import InputField from "./InputField";
 import Table from "./Table";
-import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { columns } from "../../../common/constants/tax";
 import "../styles/_app.scss";
 
-const columns = [
-  {
-    label: "ID",
-    key: "id",
-  },
-  {
-    label: "Zip Code",
-    key: "zip_code",
-  },
-  {
-    label: "City",
-    key: "city",
-  },
-  {
-    label: "City Rate",
-    key: "city_rate",
-  },
-  {
-    label: "State",
-    key: "state",
-  },
-  {
-    label: "State Name",
-    key: "state_name",
-  },
-  {
-    label: "State Rate",
-    key: "state_rate",
-  },
-  {
-    label: "County",
-    key: "county",
-  },
-  {
-    label: "County Rate",
-    key: "county_rate",
-  },
-  {
-    label: "Special",
-    key: "special",
-  },
-  {
-    label: "Combined Rate",
-    key: "combined_rate",
-    shorten: "Comb Rate",
-  },
-  {
-    label: "Combined District Rate",
-    key: "combined_district_rate",
-    shorten: "CDR",
-  },
-];
 
 function App() {
   const [isDarkMode, toggleTheme] = useTheme();
@@ -119,38 +69,21 @@ function App() {
           </p>
         </div>
       </div>
-      <p>Filter by</p>
-      <div className="columns is-variable is-4">
-        <div className="column is-one-fifth">
-          <p>Zip Code</p>
-          <input
-            className="input is-primary"
-            type="text"
-            placeholder="Primary input"
-            onChange={(e) =>
-              setFilters({ ...filters, zipCode: e.target.value })
-            }
-          ></input>
-        </div>
-        <div className="column is-one-fifth">
-          <p>City</p>
-          <input
-            className="input is-primary"
-            type="text"
-            placeholder="Primary input"
-            onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-          ></input>
-        </div>
-        <div className="column is-one-fifth">
-          <p>State</p>
-          <input
-            className="input is-primary"
-            type="text"
-            placeholder="Primary input"
-            onChange={(e) => setFilters({ ...filters, state: e.target.value })}
-          ></input>
-        </div>
+      <div className="container">
+        <h2 className="subtitle">Filter by</h2>
       </div>
+      <div className="level">
+        <InputField label="Zip Code" value={filters.zipCode}
+          onChange={(e) => setFilters({ ...filters, zipCode: e.target.value })}
+        />
+        <InputField label="City" value={filters.city}
+          onChange={(e) => setFilters({ ...filters, city: e.target.value })}
+        />
+        <InputField label="State" value={filters.state}
+          onChange={(e) => setFilters({ ...filters, state: e.target.value })}
+        />
+      </div>
+      <div className="container level columns is-variable is-4"></div>
       <div className="level">
         {data && <Table columns={columns} rows={data} />}
       </div>
